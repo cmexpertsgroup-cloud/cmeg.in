@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CM Experts Group | Secure Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    :root{
+      --red:#C62828;
+      --grey:#2F2F2F;
+      --light:#F6F6F6;
+    }
+    body{
+      font-family: Arial, sans-serif;
+      background: var(--light);
+      margin:0;
+      padding:20px;
+    }
+    .card{
+      max-width:420px;
+      background:#fff;
+      margin:auto;
+      padding:25px;
+      border-radius:10px;
+      box-shadow:0 10px 25px rgba(0,0,0,.08);
+    }
+    h1{
+      color:var(--grey);
+      margin-bottom:5px;
+    }
+    h2{
+      color:var(--red);
+      font-size:16px;
+      margin-bottom:20px;
+    }
+    label{
+      font-size:13px;
+      color:#555;
+      margin-top:12px;
+      display:block;
+    }
+    input{
+      width:100%;
+      padding:10px;
+      margin-top:5px;
+      border:1px solid #ddd;
+      border-radius:6px;
+    }
+    button{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:6px;
+      font-size:15px;
+      cursor:pointer;
+      margin-top:15px;
+    }
+    .pay{
+      background:var(--red);
+      color:#fff;
+    }
+    .wa{
+      background:#25D366;
+      color:#fff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>CM Experts Group</h1>
+  <h2>Secure Payment</h2>
+
+  <label>Client Name</label>
+  <input id="client" readonly>
+
+  <label>Invoice No</label>
+  <input id="invoice" readonly>
+
+  <label>Return Month</label>
+  <input id="period" readonly>
+
+  <label>Amount (₹)</label>
+  <input id="amount" readonly>
+
+  <button class="pay" onclick="payNow()">Click here to Pay</button>
+  <button class="wa" onclick="sendWA()">Send on WhatsApp</button>
+</div>
+
+<script>
+const p = new URLSearchParams(window.location.search);
+
+document.getElementById("client").value  = p.get("client") || "";
+document.getElementById("invoice").value = p.get("inv") || "";
+document.getElementById("period").value  = p.get("period") || "";
+document.getElementById("amount").value  = p.get("amt") || "";
+
+function payNow(){
+  const amt = p.get("amt");
+  const note = `Invoice ${p.get("inv")} - ${p.get("client")}`;
+  const upi = `upi://pay?pa=cmtaxexperts@ybl&pn=CM Experts Group&am=${amt}&cu=INR&tn=${encodeURIComponent(note)}`;
+  window.location.href = upi;
+}
+
+function sendWA(){
+  const msg =
+`CM Experts Group – Payment Link
+
+Client: ${p.get("client")}
+Invoice: ${p.get("inv")}
+Return Month: ${p.get("period")}
+Amount: ₹${p.get("amt")}
+
+Pay here:
+${window.location.href}`;
+
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+}
+</script>
+
+</body>
+</html>
