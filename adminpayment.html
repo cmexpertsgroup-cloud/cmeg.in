@@ -3,202 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CM Experts Group - Secure Payment</title>
+    <title>CM Tax Experts - Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f6f9;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        :root {
+            --primary-red: #B71C1C;
+            --light-red: #FFEBEE;
+            --dark-grey: #424242;
+            --light-grey: #f5f5f5;
         }
-
-        .payment-card {
-            background: white;
-            width: 100%;
-            max-width: 400px;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        /* LOGO */
-        .logo-img {
-            max-height: 60px;
-            margin-bottom: 15px;
-            object-fit: contain;
-        }
-
-        .title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-        }
-
-        .subtitle {
-            font-size: 13px;
-            color: #777;
-            margin-bottom: 25px;
-            border-bottom: 1px dashed #eee;
-            padding-bottom: 15px;
-        }
-
-        /* AMOUNT BOX */
-        .amount-container {
-            background: #e3f2fd; /* Light Blue Background */
-            border: 1px solid #bbdefb;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .label {
-            font-size: 12px;
-            font-weight: 700;
-            color: #1565c0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .amount {
-            font-size: 36px;
-            font-weight: 700;
-            color: #0d47a1;
-            margin-top: 5px;
-        }
-
-        /* CLIENT INFO */
-        .client-info {
-            text-align: left;
-            background: #fafafa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #eee;
-        }
-
-        .client-label { font-size: 11px; color: #888; text-transform: uppercase; }
-        .client-value { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 8px; }
-        .client-value:last-child { margin-bottom: 0; }
-
-        /* QR CODE */
-        .qr-wrapper {
-            background: white;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
+        body { font-family: 'Roboto', sans-serif; background: var(--light-grey); padding: 0; margin: 0; color: var(--dark-grey); }
         
-        #qrcode img {
-            margin: 0 auto;
-        }
+        /* LOGIN */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary-red); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .login-box { background: white; padding: 40px 30px; border-radius: 12px; width: 85%; max-width: 320px; text-align: center; }
+        .login-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; text-align: center; }
+        .btn-login { background: var(--dark-grey); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
 
-        /* PAY BUTTON (For Mobile Users) */
-        .btn-pay {
-            display: block;
-            width: 50%; /* CHANGED FROM 100% TO 50% */
-            background: #2962ff;
-            color: white;
-            padding: 15px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-            box-shadow: 0 4px 15px rgba(41, 98, 255, 0.3);
-            margin: 10px auto; /* CHANGED TO CENTER THE BUTTON */
-            transition: transform 0.2s;
-        }
-        .btn-pay:active { transform: scale(0.98); }
+        /* DASHBOARD */
+        .container { max-width: 600px; margin: 20px auto; background: white; padding: 20px; border-radius: 12px; display: none; }
+        .header { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #e0e0e0; padding-bottom: 20px; }
+        .logo-img { height: 60px; margin-bottom: 10px; }
+        .portal-title { font-size: 18px; font-weight: 700; color: var(--dark-grey); text-transform: uppercase; }
 
-        .footer {
-            margin-top: 25px;
-            font-size: 11px;
-            color: #999;
-        }
-        
-        /* Loading State */
-        .loading { color: #888; font-style: italic; }
+        /* UPI SELECTOR */
+        .upi-box { background: var(--light-red); padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; border: 1px solid #ffcdd2; }
+        .upi-dropdown { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; }
 
+        /* CLIENT LIST */
+        .client-card { border-bottom: 1px solid #e0e0e0; padding: 15px 0; display: flex; justify-content: space-between; align-items: flex-start; }
+        .client-info h3 { margin: 0 0 5px 0; font-size: 16px; color: #000; }
+        .amount-badge { background-color: var(--primary-red); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; margin-top: 5px; }
+
+        /* BUTTONS */
+        .actions { display: flex; gap: 8px; flex-direction: column; align-items: flex-end; }
+        .btn { padding: 8px 15px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px; border: none; cursor: pointer; width: 110px; }
+        .btn-wa { background: #25D366; color: white; }
+        .btn-qr { background: var(--light-grey); color: var(--dark-grey); border: 1px solid #ccc; }
+        .qr-box { display: none; margin-top: 10px; padding: 10px; background: #fff; border: 1px solid #ccc; border-radius: 8px; text-align: center; }
+
+        .top-controls { width: 100%; display: flex; justify-content: flex-end; gap: 15px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="payment-card">
-        <img src="logopay.png" alt="CM Experts Group" class="logo-img" onerror="this.style.display='none'">
-        <div class="title">CM Experts Group</div>
-        <div class="subtitle">Secure Payment Portal</div>
-
-        <div class="amount-container">
-            <div class="label">Total Payable</div>
-            <div class="amount" id="displayAmount">₹ 0</div>
-        </div>
-
-        <div class="client-info">
-            <div class="client-label">Invoice For</div>
-            <div class="client-value" id="displayClient" style="color: #000;">Loading...</div>
-            
-            <div class="client-label" style="margin-top: 10px;">Paying To</div>
-            <div class="client-value" id="displayUpi" style="font-family: monospace; color: #555;">Loading...</div>
-        </div>
-
-        <div style="font-size: 13px; font-weight: bold; color: #444; margin-bottom: 10px;">Scan QR to Pay</div>
-        <div class="qr-wrapper" id="qrcode"></div>
-
-        <a href="#" id="deepLinkBtn" class="btn-pay">
-            <i class="fa-solid fa-mobile-screen-button"></i> Tap to Pay via UPI
-        </a>
-
-        <div class="footer">
-            <i class="fa-solid fa-lock"></i> 100% Secure Transaction via CM Experts
+    <div id="loginOverlay">
+        <div class="login-box">
+            <img src="logocmte.png" alt="Logo" style="height: 50px; margin-bottom: 15px;">
+            <h2 style="color:var(--dark-grey); margin-top:0;">Secure Login</h2>
+            <input type="email" id="adminEmail" class="login-input" placeholder="Email" value="shanicm@gmail.com">
+            <input type="password" id="adminPin" class="login-input" placeholder="PIN" maxlength="4">
+            <button class="btn-login" onclick="checkLogin()">Login</button>
+            <p id="loginError" style="color:var(--primary-red); font-size:12px; margin-top:10px; display:none;">Wrong PIN.</p>
         </div>
     </div>
 
+    <div class="container" id="mainDashboard">
+        <div class="top-controls">
+            <i class="fa-solid fa-rotate" style="cursor:pointer;" onclick="location.reload()"></i>
+            <i class="fa-solid fa-power-off" style="cursor:pointer; color:var(--primary-red);" onclick="logout()"></i>
+        </div>
+
+        <div class="header">
+            <img src="logocmte.png" alt="CM Tax Experts" class="logo-img">
+            <div class="portal-title">Payment Portal Admin</div>
+        </div>
+
+        <div class="upi-box">
+            <label style="font-size:12px; font-weight:bold; color:var(--primary-red);">SELECT ADMIN UPI:</label>
+            <select id="adminUpiSelect" class="upi-dropdown" onchange="renderList()">
+                <option value="cmtaxexperts@ybl">cmtaxexperts@ybl (Tax Related)</option>
+                <option value="accountree1@fdl">accountree1@fdl (Accounting)</option>
+            </select>
+        </div>
+
+        <div id="loading" style="text-align:center; padding:40px; color:#666;">Loading Clients...</div>
+        <div id="clientList"></div>
+    </div>
+
     <script>
-        // 1. GET DATA FROM URL
-        const params = new URLSearchParams(window.location.search);
-        
-        // Defaults if data is missing
-        const clientName = params.get('client') || 'Client';
-        const amount = params.get('amt') || '0';
-        const upiID = params.get('upi') || 'cmexperts@upi';
+        const CORRECT_PIN = "3655";
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyiBS9Xy9t3qvTKSipXRXLRJBmQJ9SeTEGZiyBh21eDRgiDobRvsVXGb1f7At6QuHv1/exec'; 
+        let globalClientData = [];
 
-        // 2. AUTO-FILL HTML
-        document.getElementById('displayClient').innerText = clientName;
-        document.getElementById('displayAmount').innerText = '₹ ' + amount;
-        document.getElementById('displayUpi').innerText = upiID;
+        function checkLogin() {
+            if (document.getElementById('adminPin').value === CORRECT_PIN) {
+                localStorage.setItem('cmAdminLogin', 'true');
+                showDashboard();
+            } else { document.getElementById('loginError').style.display = 'block'; }
+        }
+        function showDashboard() {
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('mainDashboard').style.display = 'block';
+            fetchData();
+        }
+        function logout() { localStorage.removeItem('cmAdminLogin'); location.reload(); }
+        window.onload = function() { if (localStorage.getItem('cmAdminLogin') === 'true') showDashboard(); };
 
-        // 3. GENERATE UPI STRING
-        // Format: upi://pay?pa=ADDRESS&pn=NAME&am=AMOUNT&tn=NOTE
-        // We remove spaces from Client Name for the 'tn' (Transaction Note) to avoid link errors
-        const cleanName = clientName.replace(/[^a-zA-Z0-9]/g, ''); 
-        const upiString = `upi://pay?pa=${upiID}&pn=CMExpertsGroup&am=${amount}&tn=Bill-${cleanName}`;
+        function fetchData() {
+            fetch(WEB_APP_URL).then(res => res.json()).then(data => {
+                document.getElementById('loading').style.display = 'none';
+                globalClientData = data;
+                renderList();
+            });
+        }
 
-        // 4. GENERATE QR CODE AUTOMATICALLY
-        new QRCode(document.getElementById("qrcode"), {
-            text: upiString,
-            width: 160,
-            height: 160,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.M
-        });
+        function renderList() {
+            const listContainer = document.getElementById('clientList');
+            const selectedUPI = document.getElementById('adminUpiSelect').value;
+            listContainer.innerHTML = '';
 
-        // 5. ACTIVATE "TAP TO PAY" BUTTON
-        document.getElementById('deepLinkBtn').href = upiString;
+            globalClientData.forEach((row) => {
+                let rawPhone = row.phone ? row.phone.toString().replace(/[^0-9]/g, '') : '';
+                let phone = rawPhone.length === 10 ? '91' + rawPhone : rawPhone;
 
+                // UPDATED LINK: cmeg.in/pay
+                const payLink = `https://cmeg.in/pay?client=${encodeURIComponent(row.client)}&amt=${row.total}&upi=${encodeURIComponent(selectedUPI)}`;
+
+                let details = "";
+                if(row.gstRent > 0) details += `* GST on Rent - Rs.${row.gstRent}\n`;
+                if(row.fee > 0)     details += `* Fee - Rs.${row.fee}\n`;
+                if(row.gstEpf > 0)  details += `* GST & EPF - Rs.${row.gstEpf}\n`;
+
+                const msg = `*PAYMENT DUE*\n\nHello *${row.client}*,\n\nYour invoice amount Including\n${details}of is pending.\n\n*Total Payable Rs.${row.total}/-*\n\nPlease scan the QR code or pay securely using this link:\n${payLink}\n\n\nUPI id is\ncmtaxexperts@ybl (Tax Related)\naccountree1@fdl (Accounting & Auditing)`;
+                
+                const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+                const upiString = `upi://pay?pa=${selectedUPI}&pn=CMTaxExperts&am=${row.total}&tn=Bill-${row.client}`;
+
+                const card = document.createElement('div');
+                card.className = 'client-card';
+                card.innerHTML = `
+                    <div class="client-info">
+                        <h3>${row.client}</h3>
+                        <div class="amount-badge">₹ ${row.total}</div>
+                    </div>
+                    <div class="actions">
+                        <a href="${waLink}" target="_blank" class="btn btn-wa"><i class="fa-brands fa-whatsapp"></i> Send</a>
+                        <button class="btn btn-qr" onclick="toggleQR(this, '${upiString}')">QR</button>
+                        <div class="qr-box"></div>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        function toggleQR(btn, data) {
+            const box = btn.nextElementSibling;
+            if (box.style.display === 'block') {
+                box.style.display = 'none'; btn.style.background = '#f5f5f5'; btn.style.color = '#333';
+            } else {
+                if (box.innerHTML === '') new QRCode(box, { text: data, width: 100, height: 100 });
+                box.style.display = 'block'; btn.style.background = '#333'; btn.style.color = '#fff';
+            }
+        }
     </script>
-
 </body>
 </html>
