@@ -10,17 +10,17 @@
 
     <style>
         :root {
-            /* NEW THEME: Red & Grey */
-            --primary-red: #B71C1C;     /* Deep Red */
-            --light-red: #FFEBEE;       /* Light Pink/Red for backgrounds */
-            --dark-grey: #424242;       /* Dark text */
-            --light-grey: #f5f5f5;      /* Background */
+            /* THEME: Red & Grey */
+            --primary-red: #B71C1C;
+            --light-red: #FFEBEE;
+            --dark-grey: #424242;
+            --light-grey: #f5f5f5;
             --border-color: #e0e0e0;
         }
 
         body { font-family: 'Roboto', sans-serif; background: var(--light-grey); padding: 0; margin: 0; color: var(--dark-grey); }
         
-        /* --- LOGIN SCREEN --- */
+        /* LOGIN SCREEN */
         #loginOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--primary-red);
@@ -41,11 +41,9 @@
             background: var(--dark-grey); color: white; border: none;
             padding: 12px; width: 100%; border-radius: 6px;
             font-size: 16px; font-weight: bold; cursor: pointer;
-            transition: background 0.3s;
         }
-        .btn-login:hover { background: #000; }
 
-        /* --- MAIN DASHBOARD --- */
+        /* DASHBOARD */
         .container { 
             max-width: 600px; margin: 20px auto; background: white; 
             padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
@@ -58,31 +56,17 @@
             padding-bottom: 20px; 
         }
         
-        /* LOGO STYLE */
-        .logo-img {
-            height: 50px; /* Adjust based on your actual image size */
-            margin-bottom: 10px;
-        }
-        .portal-title {
-            font-size: 18px; font-weight: 700; color: var(--dark-grey);
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
+        .logo-img { height: 50px; margin-bottom: 10px; }
+        .portal-title { font-size: 18px; font-weight: 700; color: var(--dark-grey); text-transform: uppercase; }
 
         /* UPI SELECTOR */
         .upi-selector-box {
-            width: 100%;
-            background: var(--light-red);
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            text-align: center;
-            border: 1px solid #ffcdd2;
+            width: 100%; background: var(--light-red); padding: 10px;
+            border-radius: 8px; margin-bottom: 15px; text-align: center; border: 1px solid #ffcdd2;
+            box-sizing: border-box;
         }
         .upi-label { font-size: 12px; font-weight: bold; color: var(--primary-red); display: block; margin-bottom: 5px; }
-        .upi-dropdown {
-            width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;
-            font-size: 14px; font-family: 'Roboto', sans-serif;
-        }
+        .upi-dropdown { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; }
 
         /* CLIENT LIST */
         .client-card {
@@ -97,68 +81,47 @@
         .client-info p { margin: 0; font-size: 12px; color: #666; }
         
         .amount-badge {
-            background-color: var(--primary-red);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-            margin-top: 5px;
+            background-color: var(--primary-red); color: white;
+            padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;
+            display: inline-block; margin-top: 5px;
         }
 
-        .actions {
-            display: flex;
-            gap: 8px;
-            flex-direction: column;
-            align-items: flex-end;
-        }
+        .actions { display: flex; gap: 8px; flex-direction: column; align-items: flex-end; }
         
         .btn { 
             padding: 8px 15px; border-radius: 6px; text-decoration: none; 
-            font-size: 13px; font-weight: 500; display: flex; 
-            align-items: center; justify-content: center; gap: 6px; 
-            border: none; cursor: pointer; width: 110px;
+            font-size: 13px; font-weight: 500; display: flex; align-items: center; 
+            justify-content: center; gap: 6px; border: none; cursor: pointer; width: 110px;
         }
         .btn-wa { background: #25D366; color: white; }
-        .btn-wa:hover { background: #1ebc57; }
-        
         .btn-qr { background: var(--light-grey); color: var(--dark-grey); border: 1px solid #ccc; }
         
-        .qr-box { 
-            display: none; margin-top: 10px; padding: 10px; 
-            background: #fff; border: 1px solid #ccc; border-radius: 8px; 
-            text-align: center; 
-        }
+        .qr-box { display: none; margin-top: 10px; padding: 10px; background: #fff; border: 1px solid #ccc; border-radius: 8px; text-align: center; }
 
-        /* TOP BAR CONTROLS */
-        .top-controls {
-            width: 100%; display: flex; justify-content: flex-end; gap: 15px; margin-bottom: 10px;
-        }
+        /* TOP CONTROLS */
+        .top-controls { width: 100%; display: flex; justify-content: flex-end; gap: 15px; margin-bottom: 10px; }
         .icon-btn { cursor: pointer; color: #757575; font-size: 18px; }
-        .icon-btn:hover { color: var(--primary-red); }
-
     </style>
 </head>
 <body>
 
     <div id="loginOverlay">
         <div class="login-box">
-            <img src="logocmte.png" alt="Logo" style="height: 40px; margin-bottom: 15px;">
+            <img src="logocmte.png" alt="Logo" style="height: 40px; margin-bottom: 15px;" onerror="this.style.display='none'">
             <h2 style="color:var(--dark-grey); margin-top:0; font-size: 20px;">Secure Login</h2>
             
             <input type="email" id="adminEmail" class="login-input" placeholder="Email ID" value="shanicm@gmail.com">
             <input type="password" id="adminPin" class="login-input" placeholder="PIN Code" maxlength="4">
             
             <button class="btn-login" onclick="checkLogin()">ACCESS PORTAL</button>
-            <p id="loginError" style="color:var(--primary-red); font-size:12px; margin-top:10px; display:none;">Access Denied. Wrong PIN.</p>
+            <p id="loginError" style="color:var(--primary-red); font-size:12px; margin-top:10px; display:none;">Access Denied.</p>
         </div>
     </div>
 
     <div class="container" id="mainDashboard">
         
         <div class="top-controls">
-            <i class="fa-solid fa-rotate icon-btn" onclick="location.reload()" title="Refresh Data"></i>
+            <i class="fa-solid fa-rotate icon-btn" onclick="location.reload()" title="Refresh"></i>
             <i class="fa-solid fa-power-off icon-btn" style="color:var(--primary-red);" onclick="logout()" title="Logout"></i>
         </div>
 
@@ -185,17 +148,13 @@
     </div>
 
     <script>
-        // === CONFIGURATION ===
         const CORRECT_PIN = "3655";
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyiBS9Xy9t3qvTKSipXRXLRJBmQJ9SeTEGZiyBh21eDRgiDobRvsVXGb1f7At6QuHv1/exec'; 
-        
-        // We store fetched data globally so we can re-render when UPI changes
         let globalClientData = [];
 
-        // --- LOGIN LOGIC ---
+        // LOGIN
         function checkLogin() {
-            const pin = document.getElementById('adminPin').value;
-            if (pin === CORRECT_PIN) {
+            if (document.getElementById('adminPin').value === CORRECT_PIN) {
                 localStorage.setItem('cmAdminLogin', 'true');
                 showDashboard();
             } else {
@@ -215,71 +174,58 @@
         }
 
         window.onload = function() {
-            if (localStorage.getItem('cmAdminLogin') === 'true') {
-                showDashboard();
-            }
+            if (localStorage.getItem('cmAdminLogin') === 'true') showDashboard();
         };
 
-        // --- DATA FETCHING ---
+        // FETCH DATA
         function fetchData() {
             fetch(WEB_APP_URL)
                 .then(res => res.json())
                 .then(data => {
                     document.getElementById('loading').style.display = 'none';
-                    globalClientData = data; // Save data
-                    renderList(); // Initial Render
+                    globalClientData = data;
+                    renderList();
                 })
-                .catch(err => {
-                    document.getElementById('loading').innerHTML = 'Error loading data.';
-                });
+                .catch(err => { document.getElementById('loading').innerHTML = 'Error loading data.'; });
         }
 
-        // --- RENDER LIST ---
+        // RENDER LIST
         function renderList() {
             const listContainer = document.getElementById('clientList');
             const selectedUPI = document.getElementById('adminUpiSelect').value;
-            
             listContainer.innerHTML = '';
             
             if (globalClientData.length === 0) {
-                listContainer.innerHTML = '<div style="text-align:center; padding:20px;">No pending payments found.</div>';
+                listContainer.innerHTML = '<div style="text-align:center; padding:20px;">No pending payments.</div>';
                 return;
             }
 
             globalClientData.forEach((row) => {
-                // 1. Phone Formatting
+                // AUTO ADD '91' Logic
                 let rawPhone = row.phone ? row.phone.toString().replace(/[^0-9]/g, '') : '';
-                let phone = rawPhone.length === 10 ? '91' + rawPhone : rawPhone;
+                let phone = rawPhone;
+                if (rawPhone.length === 10) {
+                    phone = '91' + rawPhone; // Automatically adds 91 if missing
+                }
 
-                // 2. Generate Payment Link (Includes selected UPI)
-                // We pass the Selected UPI in the URL so the client page knows which QR to show
                 const payLink = `https://cmeg.in/pay.html?client=${encodeURIComponent(row.client)}&amt=${row.amount}&upi=${encodeURIComponent(selectedUPI)}`;
                 
-                // 3. New WhatsApp Message Format (Bold Text)
-                // Note: We cannot attach an image file via link. The client must click the link to see the QR.
+                // BOLD Message Text
                 const msg = `*Payment Due*\n\nHello *${row.client}*,\n\nYour invoice amount of *₹${row.amount}* is pending.\n\nPlease scan the QR code or pay securely using this link:\n${payLink}`;
-                
                 const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-                
-                // 4. Admin QR String (For local preview)
                 const upiString = `upi://pay?pa=${selectedUPI}&pn=CMTaxExperts&am=${row.amount}&tn=Bill-${row.client}`;
 
-                // 5. Build Card
                 const card = document.createElement('div');
                 card.className = 'client-card';
                 card.innerHTML = `
                     <div class="client-info">
                         <h3>${row.client}</h3>
                         <div class="amount-badge">₹ ${row.amount}</div>
-                        <p style="margin-top:5px; font-family:monospace;">${row.phone || 'No Mobile'}</p>
+                        <p style="margin-top:5px; font-family:monospace;">${phone || 'No Mobile'}</p>
                     </div>
                     <div class="actions">
-                        <a href="${waLink}" target="_blank" class="btn btn-wa">
-                            <i class="fa-brands fa-whatsapp"></i> Send Bill
-                        </a>
-                        <button class="btn btn-qr" onclick="toggleQR(this, '${upiString}')">
-                            <i class="fa-solid fa-qrcode"></i> Show QR
-                        </button>
+                        <a href="${waLink}" target="_blank" class="btn btn-wa"><i class="fa-brands fa-whatsapp"></i> Send Bill</a>
+                        <button class="btn btn-qr" onclick="toggleQR(this, '${upiString}')"><i class="fa-solid fa-qrcode"></i> Show QR</button>
                         <div class="qr-box"></div>
                     </div>
                 `;
@@ -287,10 +233,7 @@
             });
         }
 
-        // Re-render list when Dropdown changes
-        function updateLinks() {
-            renderList();
-        }
+        function updateLinks() { renderList(); }
 
         function toggleQR(btn, data) {
             const box = btn.nextElementSibling;
