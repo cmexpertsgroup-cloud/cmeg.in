@@ -2,122 +2,176 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CM Experts Group | Secure Payment</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CM Experts Group | Secure Payment</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --red:#C62828;
-      --grey:#2F2F2F;
-      --light:#F6F6F6;
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
     }
-    body{
-      font-family: Arial, sans-serif;
-      background: var(--light);
-      margin:0;
-      padding:20px;
+
+    body {
+      margin: 0;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .card{
-      max-width:420px;
-      background:#fff;
-      margin:auto;
-      padding:25px;
-      border-radius:10px;
-      box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+    .card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 420px;
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     }
-    h1{
-      color:var(--grey);
-      margin-bottom:5px;
+
+    h1 {
+      margin: 0;
+      font-size: 26px;
+      color: #2f2f2f;
     }
-    h2{
-      color:var(--red);
-      font-size:16px;
-      margin-bottom:20px;
+
+    h2 {
+      margin-top: 6px;
+      font-size: 16px;
+      color: #b0302c; /* CM Red */
+      font-weight: 600;
     }
-    label{
-      font-size:13px;
-      color:#555;
-      margin-top:12px;
-      display:block;
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-size: 13px;
+      color: #555;
+      font-weight: 500;
     }
-    input{
-      width:100%;
-      padding:10px;
-      margin-top:5px;
-      border:1px solid #ddd;
-      border-radius:6px;
+
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      margin-top: 6px;
+      font-size: 15px;
+      border-radius: 8px;
+      border: 1.5px solid #d0d0d0;
+      outline: none;
+      transition: 0.2s;
     }
-    button{
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:6px;
-      font-size:15px;
-      cursor:pointer;
-      margin-top:15px;
+
+    input:focus, select:focus {
+      border-color: #b0302c;
+      box-shadow: 0 0 0 3px rgba(176,48,44,0.12);
     }
-    .pay{
-      background:var(--red);
-      color:#fff;
+
+    .btn-pay {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      background: #b0302c;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
     }
-    .wa{
-      background:#25D366;
-      color:#fff;
+
+    .btn-pay:hover {
+      background: #8f2623;
+    }
+
+    .btn-wa {
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px;
+      background: #25d366;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      margin-top: 16px;
     }
   </style>
 </head>
+
 <body>
 
-<div class="card">
-  <h1>CM Experts Group</h1>
-  <h2>Secure Payment</h2>
+  <div class="card">
+    <h1>CM Experts Group</h1>
+    <h2>Secure Payment</h2>
 
-  <label>Client Name</label>
-  <input id="client" readonly>
+    <label>Client Name</label>
+    <input type="text" id="clientName" placeholder="Enter client name">
 
-  <label>Invoice No</label>
-  <input id="invoice" readonly>
+    <label>Invoice No</label>
+    <input type="text" id="invoiceNo" placeholder="Auto / Manual">
 
-  <label>Return Month</label>
-  <input id="period" readonly>
+    <label>Return Month</label>
+    <select id="returnMonth">
+      <option value="">Select month</option>
+      <option>Jan-2026</option>
+      <option>Feb-2026</option>
+      <option>Mar-2026</option>
+      <option>Apr-2026</option>
+    </select>
 
-  <label>Amount (₹)</label>
-  <input id="amount" readonly>
+    <label>Amount (₹)</label>
+    <input type="number" id="amount" placeholder="Enter amount">
 
-  <button class="pay" onclick="payNow()">Click here to Pay</button>
-  <button class="wa" onclick="sendWA()">Send on WhatsApp</button>
-</div>
+    <button class="btn-pay" onclick="payNow()">Click here to Pay</button>
 
-<script>
-const p = new URLSearchParams(window.location.search);
+    <button class="btn-wa" onclick="sendWhatsApp()">Send on WhatsApp</button>
 
-document.getElementById("client").value  = p.get("client") || "";
-document.getElementById("invoice").value = p.get("inv") || "";
-document.getElementById("period").value  = p.get("period") || "";
-document.getElementById("amount").value  = p.get("amt") || "";
+    <div class="footer-note">
+      © CM Experts Group
+    </div>
+  </div>
 
-function payNow(){
-  const amt = p.get("amt");
-  const note = `Invoice ${p.get("inv")} - ${p.get("client")}`;
-  const upi = `upi://pay?pa=cmtaxexperts@ybl&pn=CM Experts Group&am=${amt}&cu=INR&tn=${encodeURIComponent(note)}`;
-  window.location.href = upi;
-}
+  <script>
+    // Auto-fill from URL (optional)
+    const p = new URLSearchParams(window.location.search);
+    document.getElementById('clientName').value = p.get('client') || '';
+    document.getElementById('invoiceNo').value = p.get('inv') || '';
+    document.getElementById('returnMonth').value = p.get('period') || '';
+    document.getElementById('amount').value = p.get('amt') || '';
 
-function sendWA(){
-  const msg =
-`CM Experts Group – Payment Link
+    function payNow() {
+      const amt = document.getElementById('amount').value;
+      if (!amt) {
+        alert('Please enter amount');
+        return;
+      }
 
-Client: ${p.get("client")}
-Invoice: ${p.get("inv")}
-Return Month: ${p.get("period")}
-Amount: ₹${p.get("amt")}
+      // 🔴 Replace with your real UPI ID
+      const upi = `upi://pay?pa=cmtaxexperts@ybl&pn=CM%20Experts%20Group&am=${amt}&cu=INR`;
+      window.location.href = upi;
+    }
 
-Pay here:
-${window.location.href}`;
+    function sendWhatsApp() {
+      const name = document.getElementById('clientName').value;
+      const inv = document.getElementById('invoiceNo').value;
+      const month = document.getElementById('returnMonth').value;
+      const amt = document.getElementById('amount').value;
 
-  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
-}
-</script>
+      const msg = `CM Experts Group Payment\n\nClient: ${name}\nInvoice: ${inv}\nReturn Month: ${month}\nAmount: ₹${amt}\n\nPayment Link:\n${window.location.href}`;
+      const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    }
+  </script>
 
 </body>
 </html>
