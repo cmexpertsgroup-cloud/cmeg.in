@@ -9,156 +9,139 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        :root {
-            --primary-red: #B71C1C;
-            --light-red: #FFEBEE;
-            --dark-grey: #424242;
-            --light-grey: #f5f5f5;
-        }
-        body { font-family: 'Roboto', sans-serif; background: var(--light-grey); padding: 0; margin: 0; color: var(--dark-grey); }
+        :root { --primary-red: #B71C1C; --light-grey: #f5f5f5; --dark-grey: #333; }
+        body { font-family: 'Roboto', sans-serif; background: var(--light-grey); margin: 0; padding: 20px; color: var(--dark-grey); }
         
-        /* LOGIN */
-        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary-red); display: flex; justify-content: center; align-items: center; z-index: 9999; }
-        .login-box { background: white; padding: 40px 30px; border-radius: 12px; width: 85%; max-width: 320px; text-align: center; }
-        .login-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; text-align: center; }
-        .btn-login { background: var(--dark-grey); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
-
-        /* DASHBOARD */
-        .container { max-width: 600px; margin: 20px auto; background: white; padding: 20px; border-radius: 12px; display: none; }
-        .header { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #e0e0e0; padding-bottom: 20px; }
-        .logo-img { height: 60px; margin-bottom: 10px; }
-        .portal-title { font-size: 18px; font-weight: 700; color: var(--dark-grey); text-transform: uppercase; }
-
-        /* UPI SELECTOR */
-        .upi-box { background: var(--light-red); padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; border: 1px solid #ffcdd2; }
-        .upi-dropdown { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; }
-
-        /* CLIENT LIST */
-        .client-card { border-bottom: 1px solid #e0e0e0; padding: 15px 0; display: flex; justify-content: space-between; align-items: flex-start; }
-        .client-info h3 { margin: 0 0 5px 0; font-size: 16px; color: #000; }
-        .amount-badge { background-color: var(--primary-red); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; margin-top: 5px; }
-
-        /* BUTTONS */
-        .actions { display: flex; gap: 8px; flex-direction: column; align-items: flex-end; }
-        .btn { padding: 8px 15px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px; border: none; cursor: pointer; width: 110px; }
-        .btn-wa { background: #25D366; color: white; }
-        .btn-qr { background: var(--light-grey); color: var(--dark-grey); border: 1px solid #ccc; }
-        .qr-box { display: none; margin-top: 10px; padding: 10px; background: #fff; border: 1px solid #ccc; border-radius: 8px; text-align: center; }
-
-        .top-controls { width: 100%; display: flex; justify-content: flex-end; gap: 15px; margin-bottom: 10px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+        .logo-img { height: 60px; } 
+        
+        .upi-box { background: #FFEBEE; padding: 10px; border: 1px solid #ffcdd2; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        .upi-dropdown { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+        
+        .client-card { border-bottom: 1px solid #eee; padding: 15px 0; display: flex; justify-content: space-between; align-items: flex-start; }
+        .client-info h3 { margin: 0; font-size: 16px; font-weight: 700; }
+        .amount-badge { background: var(--primary-red); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-top: 5px; display: inline-block; }
+        
+        .btn-wa { background: #25D366; color: white; padding: 8px 15px; border-radius: 6px; text-decoration: none; font-size: 14px; display: flex; align-items: center; gap: 5px; font-weight: 500; cursor: pointer; }
+        .btn-wa.disabled { background: #ccc; cursor: not-allowed; }
+        
+        .btn-qr { background: #eee; color: #333; border: 1px solid #ddd; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-top: 5px; font-size: 12px; }
+        .qr-box { display: none; margin-top: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; text-align: center; }
+        
+        .actions { display: flex; flex-direction: column; align-items: flex-end; }
+        .phone-display { font-size: 11px; color: #999; margin-top: 2px; }
     </style>
 </head>
 <body>
 
-    <div id="loginOverlay">
-        <div class="login-box">
-            <img src="logocmte.png" alt="Logo" style="height: 50px; margin-bottom: 15px;">
-            <h2 style="color:var(--dark-grey); margin-top:0;">Secure Login</h2>
-            <input type="email" id="adminEmail" class="login-input" placeholder="Email" value="shanicm@gmail.com">
-            <input type="password" id="adminPin" class="login-input" placeholder="PIN" maxlength="4">
-            <button class="btn-login" onclick="checkLogin()">Login</button>
-            <p id="loginError" style="color:var(--primary-red); font-size:12px; margin-top:10px; display:none;">Wrong PIN.</p>
-        </div>
+<div class="container">
+    <div class="header">
+        <img src="logocmte.png" alt="CM Tax Experts" class="logo-img" onerror="this.style.display='none'">
+        <h3>PAYMENT PORTAL ADMIN</h3>
+        <button onclick="location.reload()" style="border:none; background:none; color:#666; cursor:pointer;"><i class="fa-solid fa-rotate"></i> Refresh</button>
     </div>
 
-    <div class="container" id="mainDashboard">
-        <div class="top-controls">
-            <i class="fa-solid fa-rotate" style="cursor:pointer;" onclick="location.reload()"></i>
-            <i class="fa-solid fa-power-off" style="cursor:pointer; color:var(--primary-red);" onclick="logout()"></i>
-        </div>
-
-        <div class="header">
-            <img src="logocmte.png" alt="CM Tax Experts" class="logo-img">
-            <div class="portal-title">Payment Portal Admin</div>
-        </div>
-
-        <div class="upi-box">
-            <label style="font-size:12px; font-weight:bold; color:var(--primary-red);">SELECT ADMIN UPI:</label>
-            <select id="adminUpiSelect" class="upi-dropdown" onchange="renderList()">
-                <option value="cmtaxexperts@ybl">cmtaxexperts@ybl (Tax Related)</option>
-                <option value="accountree1@fdl">accountree1@fdl (Accounting)</option>
-            </select>
-        </div>
-
-        <div id="loading" style="text-align:center; padding:40px; color:#666;">Loading Clients...</div>
-        <div id="clientList"></div>
+    <div class="upi-box">
+        <label style="font-size:12px; font-weight:bold; color:var(--primary-red);">SELECT ADMIN UPI:</label>
+        <select id="adminUpiSelect" class="upi-dropdown" onchange="renderList()">
+            <option value="cmtaxexperts@ybl">cmtaxexperts@ybl (Tax Related)</option>
+            <option value="accountree1@fdl">accountree1@fdl (Accounting)</option>
+        </select>
     </div>
 
-    <script>
-        const CORRECT_PIN = "3655";
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyiBS9Xy9t3qvTKSipXRXLRJBmQJ9SeTEGZiyBh21eDRgiDobRvsVXGb1f7At6QuHv1/exec'; 
-        let globalClientData = [];
+    <div id="loading" style="text-align:center;">Loading Data...</div>
+    <div id="clientList"></div>
+</div>
 
-        function checkLogin() {
-            if (document.getElementById('adminPin').value === CORRECT_PIN) {
-                localStorage.setItem('cmAdminLogin', 'true');
-                showDashboard();
-            } else { document.getElementById('loginError').style.display = 'block'; }
-        }
-        function showDashboard() {
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('mainDashboard').style.display = 'block';
-            fetchData();
-        }
-        function logout() { localStorage.removeItem('cmAdminLogin'); location.reload(); }
-        window.onload = function() { if (localStorage.getItem('cmAdminLogin') === 'true') showDashboard(); };
+<script>
+    // --- IMPORTANT: PASTE THE URL THAT GAVE YOU THE JSON DATA BELOW ---
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyiBS9Xy9t3qvTKSipXRXLRJBmQJ9SeTEGZiyBh21eDRgiDobRvsVXGb1f7At6QuHv1/exec';
+    
+    let globalData = [];
 
-        function fetchData() {
-            fetch(WEB_APP_URL).then(res => res.json()).then(data => {
-                document.getElementById('loading').style.display = 'none';
-                globalClientData = data;
-                renderList();
-            });
-        }
+    // Fetch Data
+    fetch(WEB_APP_URL)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('loading').style.display = 'none';
+            globalData = data;
+            renderList();
+        })
+        .catch(err => {
+            document.getElementById('loading').innerHTML = 'Error loading data. Check URL.';
+        });
 
-        function renderList() {
-            const listContainer = document.getElementById('clientList');
-            const selectedUPI = document.getElementById('adminUpiSelect').value;
-            listContainer.innerHTML = '';
+    function renderList() {
+        const list = document.getElementById('clientList');
+        const selectedUPI = document.getElementById('adminUpiSelect').value;
+        list.innerHTML = '';
 
-            globalClientData.forEach((row) => {
-                let rawPhone = row.phone ? row.phone.toString().replace(/[^0-9]/g, '') : '';
-                let phone = rawPhone.length === 10 ? '91' + rawPhone : rawPhone;
+        if(globalData.length === 0) { list.innerHTML = '<div style="text-align:center;">No Pending Payments</div>'; return; }
 
-                // UPDATED LINK: cmeg.in/pay
-                const payLink = `https://cmeg.in/pay?client=${encodeURIComponent(row.client)}&amt=${row.total}&upi=${encodeURIComponent(selectedUPI)}`;
+        globalData.forEach(row => {
+            const total = row.total || 0; 
+            
+            // --- SMART PHONE NUMBER LOGIC ---
+            // Handles "No", empty, or weird formats
+            let rawPhone = row.phone ? row.phone.toString() : '';
+            let cleanPhone = rawPhone.replace(/[^0-9]/g, '');
+            let finalPhone = '';
+            let isPhoneValid = false;
 
-                let details = "";
-                if(row.gstRent > 0) details += `* GST on Rent - Rs.${row.gstRent}\n`;
-                if(row.fee > 0)     details += `* Fee - Rs.${row.fee}\n`;
-                if(row.gstEpf > 0)  details += `* GST & EPF - Rs.${row.gstEpf}\n`;
-
-                const msg = `*PAYMENT DUE*\n\nHello *${row.client}*,\n\nYour invoice amount Including\n${details}of is pending.\n\n*Total Payable Rs.${row.total}/-*\n\nPlease scan the QR code or pay securely using this link:\n${payLink}\n\n\nUPI id is\ncmtaxexperts@ybl (Tax Related)\naccountree1@fdl (Accounting & Auditing)`;
-                
-                const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-                const upiString = `upi://pay?pa=${selectedUPI}&pn=CMTaxExperts&am=${row.total}&tn=Bill-${row.client}`;
-
-                const card = document.createElement('div');
-                card.className = 'client-card';
-                card.innerHTML = `
-                    <div class="client-info">
-                        <h3>${row.client}</h3>
-                        <div class="amount-badge">₹ ${row.total}</div>
-                    </div>
-                    <div class="actions">
-                        <a href="${waLink}" target="_blank" class="btn btn-wa"><i class="fa-brands fa-whatsapp"></i> Send</a>
-                        <button class="btn btn-qr" onclick="toggleQR(this, '${upiString}')">QR</button>
-                        <div class="qr-box"></div>
-                    </div>
-                `;
-                listContainer.appendChild(card);
-            });
-        }
-
-        function toggleQR(btn, data) {
-            const box = btn.nextElementSibling;
-            if (box.style.display === 'block') {
-                box.style.display = 'none'; btn.style.background = '#f5f5f5'; btn.style.color = '#333';
-            } else {
-                if (box.innerHTML === '') new QRCode(box, { text: data, width: 100, height: 100 });
-                box.style.display = 'block'; btn.style.background = '#333'; btn.style.color = '#fff';
+            if (cleanPhone.length >= 10) {
+                finalPhone = '91' + cleanPhone.slice(-10);
+                isPhoneValid = true;
             }
+
+            // Generate Payment Link
+            const link = `https://cmeg.in/pay?client=${encodeURIComponent(row.client)}&amt=${total}&upi=${encodeURIComponent(selectedUPI)}`;
+
+            // Build WhatsApp Message
+            let details = "";
+            if (row.gstRent > 0) details += `* GST on Rent - Rs.${row.gstRent}\n`;
+            if (row.fee > 0)     details += `* Fee - Rs.${row.fee}\n`;
+            if (row.gstEpf > 0)  details += `* GST & EPF - Rs.${row.gstEpf}\n`;
+
+            const msg = `*PAYMENT DUE*\n\nHello *${row.client}*,\n\nYour invoice amount Including\n${details}is pending.\n\n*Total Payable Rs.${total}/-*\n\nPlease scan the QR code or pay securely using this link:\n${link}\n\nUPI id is\ncmtaxexperts@ybl (Tax Related)\naccountree1@fdl (Accounting & Auditing)`;
+            
+            const waLink = isPhoneValid ? `https://wa.me/${finalPhone}?text=${encodeURIComponent(msg)}` : 'javascript:alert("No Valid Phone Number");';
+            const btnClass = isPhoneValid ? 'btn-wa' : 'btn-wa disabled';
+            const btnText = isPhoneValid ? 'Send' : 'No Phone';
+
+            // Admin QR String
+            const upiString = `upi://pay?pa=${selectedUPI}&pn=CMExperts&am=${total}&tn=Bill-${row.client}`;
+
+            const div = document.createElement('div');
+            div.className = 'client-card';
+            div.innerHTML = `
+                <div class="client-info">
+                    <h3>${row.client}</h3>
+                    <div class="amount-badge">₹ ${total}</div>
+                    <div class="phone-display">${rawPhone || 'No Number'}</div>
+                </div>
+                <div class="actions">
+                    <a href="${waLink}" target="_blank" class="${btnClass}">
+                        <i class="fa-brands fa-whatsapp"></i> ${btnText}
+                    </a>
+                    <button class="btn-qr" onclick="toggleQR(this, '${upiString}')">QR</button>
+                    <div class="qr-box"></div>
+                </div>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    function toggleQR(btn, data) {
+        const box = btn.nextElementSibling;
+        if (box.style.display === 'block') {
+            box.style.display = 'none';
+        } else {
+            if (box.innerHTML === '') new QRCode(box, { text: data, width: 100, height: 100 });
+            box.style.display = 'block';
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
