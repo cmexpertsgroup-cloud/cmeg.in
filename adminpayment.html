@@ -25,8 +25,9 @@
         /* Fixed Badge Color */
         .amount-badge { background: var(--primary-red); color: white; padding: 4px 8px; border-radius: 4px; font-size: 14px; font-weight: bold; margin-top: 5px; display: inline-block; }
         
+        /* Updated Button Styles */
         .btn-wa { background: #25D366; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none; font-size: 14px; display: flex; align-items: center; gap: 5px; font-weight: 500; cursor: pointer; border: none; }
-        .btn-wa.disabled { background: #ccc; cursor: not-allowed; }
+        .btn-wa:hover { background: #20b855; }
         
         .btn-qr { background: #fff; color: #333; border: 1px solid #ccc; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-top: 8px; font-size: 12px; width: 100%; }
         .qr-box { display: none; margin-top: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; text-align: center; }
@@ -50,7 +51,7 @@
         <label style="font-size:12px; font-weight:bold; color:var(--primary-red);">SELECT ADMIN UPI:</label>
         <select id="adminUpiSelect" class="upi-dropdown" onchange="renderList()">
             <option value="cmtaxexperts@ybl">cmtaxexperts@ybl (Tax Related)</option>
-            <option value="accountree1@fbl">accountree1@fbl (Accounting)</option>
+            <option value="accountree1@fdl">accountree1@fdl (Accounting)</option>
         </select>
     </div>
 
@@ -103,17 +104,24 @@
 
             // Message Construction
             let details = "";
-            // We use 'row.gstRent || 0' to prevent undefined errors in message
             if (row.gstRent > 0) details += `* GST on Rent - Rs.${row.gstRent}\n`;
             if (row.fee > 0)     details += `* Fee - Rs.${row.fee}\n`;
             if (row.gstEpf > 0)  details += `* GST & EPF - Rs.${row.gstEpf}\n`;
 
             const msg = `*PAYMENT DUE*\n\nHello *${row.client}*,\n\nYour invoice amount Including\n${details}is pending.\n\n*Total Payable Rs.${total}/-*\n\nPlease scan the QR code or pay securely using this link:\n${link}\n\nUPI id is\ncmtaxexperts@ybl (Tax Related)\naccountree1@fdl (Accounting & Auditing)`;
             
-            const waLink = isPhoneValid ? `https://wa.me/${finalPhone}?text=${encodeURIComponent(msg)}` : '#';
-            const btnClass = isPhoneValid ? 'btn-wa' : 'btn-wa disabled';
-            const btnText = isPhoneValid ? 'Send' : 'No Phone';
-            const btnAction = isPhoneValid ? `window.open('${waLink}', '_blank')` : `alert('Invalid or missing phone number')`;
+            // --- UPDATED SEND LOGIC ---
+            // If phone exists: Send to that phone
+            // If phone MISSING: Open WhatsApp Contact Picker
+            let waLink;
+            if (isPhoneValid) {
+                waLink = `https://wa.me/${finalPhone}?text=${encodeURIComponent(msg)}`;
+            } else {
+                waLink = `https://wa.me/?text=${encodeURIComponent(msg)}`; // Opens contact picker
+            }
+
+            const btnText = isPhoneValid ? 'Send' : 'Select Contact'; // Shows "Select Contact" if no number
+            const phoneDisplayText = isPhoneValid ? finalPhone : 'No Number Saved';
 
             // Admin QR String
             const upiString = `upi://pay?pa=${selectedUPI}&pn=CMExperts&am=${total}&tn=Bill-${row.client}`;
@@ -124,10 +132,10 @@
                 <div class="client-info">
                     <h3>${row.client}</h3>
                     <div class="amount-badge">₹ ${total}</div>
-                    <div class="phone-display">${rawPhone || 'No Number'}</div>
+                    <div class="phone-display">${phoneDisplayText}</div>
                 </div>
                 <div class="actions">
-                    <button onclick="${btnAction}" class="${btnClass}">
+                    <button onclick="window.open('${waLink}', '_blank')" class="btn-wa">
                         <i class="fa-brands fa-whatsapp"></i> ${btnText}
                     </button>
                     <button class="btn-qr" onclick="toggleQR(this, '${upiString}')">QR</button>
