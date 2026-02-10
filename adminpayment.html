@@ -62,7 +62,6 @@
     
     let globalData = [];
 
-    // Added cache buster (?nocache=...) to force fresh data load
     fetch(WEB_APP_URL + '?nocache=' + new Date().getTime())
         .then(res => res.json())
         .then(data => {
@@ -82,7 +81,7 @@
         if(globalData.length === 0) { list.innerHTML = '<div style="text-align:center;">No Pending Payments</div>'; return; }
 
         globalData.forEach(row => {
-            // === FORCE NUMBERS TO AVOID ERRORS ===
+            // Force Numbers
             const total = Number(row.total || row.amount || 0);
             const gstRent = Number(row.gstRent || 0);
             const fee = Number(row.fee || 0);
@@ -102,23 +101,21 @@
             // Payment Link
             const link = `https://cmeg.in/pay?client=${encodeURIComponent(row.client)}&amt=${total}&upi=${encodeURIComponent(selectedUPI)}`;
 
-            // === SMART MESSAGE BUILDER ===
+            // === SPECIFIC SERVICE DESCRIPTIONS ADDED HERE ===
             let breakdown = "";
             if (gstRent > 0) breakdown += `  • GST on Rent: Rs.${gstRent}\n`;
-            if (fee > 0)     breakdown += `  • Fee: Rs.${fee}\n`;
-            if (gstEpf > 0)  breakdown += `  • GST & EPF: Rs.${gstEpf}\n`;
+            if (fee > 0)     breakdown += `  • GST Return / Professional Fee: Rs.${fee}\n`;
+            if (gstEpf > 0)  breakdown += `  • GST & EPF Payment: Rs.${gstEpf}\n`;
 
-            // Start Message
+            // Message Construction
             let msg = `*PAYMENT DUE*\n\nHello *${row.client}*,\n\n`;
 
-            // Only show "Including" line if there IS a breakdown
             if (breakdown !== "") {
-                msg += `Your invoice amount Including:\n${breakdown}\nis pending.\n\n`;
+                msg += `Your invoice amount for:\n${breakdown}\nis pending.\n\n`;
             } else {
                 msg += `Your invoice payment is pending.\n\n`;
             }
 
-            // Finish Message
             msg += `*Total Payable: Rs.${total}/-*\n\nPlease scan the QR code or pay securely using this link:\n${link}\n\nUPI id:\ncmtaxexperts@ybl (Tax Related)\naccountree1@fdl (Accounting & Auditing)`;
             
             // Send Button Logic
@@ -132,7 +129,7 @@
             const btnText = isPhoneValid ? 'Send' : 'Select Contact';
             const phoneDisplayText = isPhoneValid ? finalPhone : 'No Number Saved';
 
-            // Admin QR String
+            // QR
             const upiString = `upi://pay?pa=${selectedUPI}&pn=CMExperts&am=${total}&tn=Bill-${row.client}`;
 
             const div = document.createElement('div');
