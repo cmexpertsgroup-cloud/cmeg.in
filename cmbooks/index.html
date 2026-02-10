@@ -127,34 +127,85 @@ th{font-size:12px;color:var(--muted);text-transform:uppercase}
 <!-- SIDEBAR -->
 <div class="sidebar">
 
-<button class="add-btn" onclick="alert('New Transaction')">
-<i class="fas fa-plus"></i> New Transaction
-</button>
+  <!-- PRIMARY ACTION -->
+  <button class="add-btn" onclick="alert('New Transaction')">
+    <i class="fas fa-plus"></i> New Transaction
+  </button>
 
-<div class="sidebar-title">Overview</div>
-<div class="nav-item active" onclick="show('dashboard')">
-<i class="fas fa-chart-line"></i> Dashboard
+  <!-- OVERVIEW (ALWAYS VISIBLE) -->
+  <div class="sidebar-title">Overview</div>
+  <div class="nav-item active" onclick="show('dashboard')">
+    <i class="fas fa-chart-line"></i> Dashboard
+  </div>
+
+  <!-- MASTERS (ALWAYS VISIBLE) -->
+  <div class="sidebar-title">Masters</div>
+  <div class="nav-item">
+    <i class="fas fa-users"></i> Parties
+  </div>
+  <div class="nav-item">
+    <i class="fas fa-box"></i> Items / Services
+  </div>
+
+  <!-- TRANSACTIONS -->
+  <div class="sidebar-title">Transactions</div>
+
+  <!-- Sales = ALWAYS -->
+  <div class="nav-item">
+    <i class="fas fa-file-invoice-dollar"></i> Sales
+  </div>
+
+  <!-- PURCHASE = RULE CONTROLLED -->
+  <div class="nav-item" data-module="purchase">
+    <i class="fas fa-cart-shopping"></i> Purchase
+  </div>
+
+  <!-- Expenses = ALWAYS -->
+  <div class="nav-item">
+    <i class="fas fa-money-bill"></i> Expenses
+  </div>
+
+  <!-- Receipts = ALWAYS -->
+  <div class="nav-item">
+    <i class="fas fa-arrow-down"></i> Receipts
+  </div>
+
+  <!-- Payments = ALWAYS -->
+  <div class="nav-item">
+    <i class="fas fa-arrow-up"></i> Payments
+  </div>
+
+  <!-- Journal = ALWAYS -->
+  <div class="nav-item">
+    <i class="fas fa-book"></i> Journal Entries
+  </div>
+
+  <!-- INVENTORY = RULE CONTROLLED -->
+  <div class="sidebar-title" data-module="inventory">Inventory</div>
+  <div class="nav-item" data-module="inventory">
+    <i class="fas fa-warehouse"></i> Stock Summary
+  </div>
+
+  <!-- MANUFACTURING = RULE CONTROLLED -->
+  <div class="sidebar-title" data-module="manufacturing">Manufacturing</div>
+  <div class="nav-item" data-module="manufacturing">
+    <i class="fas fa-industry"></i> Production
+  </div>
+
+  <!-- REPORTS (ALWAYS VISIBLE) -->
+  <div class="sidebar-title">Reports</div>
+  <div class="nav-item">
+    <i class="fas fa-chart-bar"></i> Reports
+  </div>
+
+  <!-- SETTINGS (ALWAYS VISIBLE) -->
+  <div class="sidebar-title">Settings</div>
+  <div class="nav-item">
+    <i class="fas fa-gear"></i> Settings
+  </div>
+
 </div>
 
-<div class="sidebar-title">Masters</div>
-<div class="nav-item"><i class="fas fa-users"></i> Parties</div>
-<div class="nav-item"><i class="fas fa-box"></i> Items / Services</div>
-
-<div class="sidebar-title">Transactions</div>
-<div class="nav-item"><i class="fas fa-file-invoice-dollar"></i> Sales</div>
-<div class="nav-item"><i class="fas fa-cart-shopping"></i> Purchase</div>
-<div class="nav-item"><i class="fas fa-money-bill"></i> Expenses</div>
-<div class="nav-item"><i class="fas fa-arrow-down"></i> Receipts</div>
-<div class="nav-item"><i class="fas fa-arrow-up"></i> Payments</div>
-<div class="nav-item"><i class="fas fa-book"></i> Journal Entries</div>
-
-<div class="sidebar-title">Reports</div>
-<div class="nav-item"><i class="fas fa-chart-bar"></i> Reports</div>
-
-<div class="sidebar-title">Settings</div>
-<div class="nav-item"><i class="fas fa-gear"></i> Settings</div>
-
-</div>
 
 <!-- CONTENT -->
 <div class="content" id="dashboard">
