@@ -23,12 +23,9 @@
         .client-info h3 { margin: 0; font-size: 16px; font-weight: 700; }
         
         .amount-badge { background: var(--primary-red); color: white; padding: 4px 8px; border-radius: 4px; font-size: 14px; font-weight: bold; margin-top: 5px; display: inline-block; }
-        
         .btn-wa { background: #25D366; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none; font-size: 14px; display: flex; align-items: center; gap: 5px; font-weight: 500; cursor: pointer; border: none; }
-        
         .btn-qr { background: #fff; color: #333; border: 1px solid #ccc; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-top: 8px; font-size: 12px; width: 100%; }
         .qr-box { display: none; margin-top: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; text-align: center; }
-        
         .actions { display: flex; flex-direction: column; align-items: flex-end; }
         .phone-display { font-size: 11px; color: #999; margin-top: 2px; }
     </style>
@@ -57,11 +54,12 @@
 </div>
 
 <script>
-    // === WEB APP URL ===
+    // === PASTE YOUR WEB APP URL HERE ===
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyiBS9Xy9t3qvTKSipXRXLRJBmQJ9SeTEGZiyBh21eDRgiDobRvsVXGb1f7At6QuHv1/exec';
     
     let globalData = [];
 
+    // Cache Buster
     fetch(WEB_APP_URL + '?nocache=' + new Date().getTime())
         .then(res => res.json())
         .then(data => {
@@ -81,13 +79,36 @@
         if(globalData.length === 0) { list.innerHTML = '<div style="text-align:center;">No Pending Payments</div>'; return; }
 
         globalData.forEach(row => {
-            // Force Numbers
-            const total = Number(row.total || row.amount || 0);
+            // === 1. FORCE VALUES TO NUMBERS ===
             const gstRent = Number(row.gstRent || 0);
             const fee = Number(row.fee || 0);
             const gstEpf = Number(row.gstEpf || 0);
+            
+            // Calculate total or use provided total
+            let total = Number(row.total || row.amount || 0);
+            if (total === 0) total = gstRent + fee + gstEpf;
 
-            // Phone Logic
+            // === 2. MESSAGE BREAKDOWN ===
+            let breakdown = "";
+            if (gstRent > 0) breakdown += `* GST on Rent - Rs.${gstRent}\n`;
+            if (fee > 0)     breakdown += `* GST Return Fee - Rs.${fee}\n`;
+            if (gstEpf > 0)  breakdown += `* GST & EPF Payment - Rs.${gstEpf}\n`;
+
+            // === 3. CONSTRUCT MESSAGE ===
+            const link = `https://cmeg.in/pay?client=${encodeURIComponent(row.client)}&amt=${total}&upi=${encodeURIComponent(selectedUPI)}`;
+            
+            let msg = `*PAYMENT DUE*\n\nHello *${row.client}*,\n\n`;
+            
+            // Only add "Including" if there is a breakdown
+            if (breakdown !== "") {
+                msg += `Your invoice amount Including\n${breakdown}is pending.\n\n`;
+            } else {
+                msg += `Your invoice payment is pending.\n\n`;
+            }
+
+            msg += `*Total Payable Rs.${total}/-*\n\nPlease scan the QR code or pay securely using this link:\n${link}\n\nUPI id is\ncmtaxexperts@ybl (Tax Related)\naccountree1@fdl (Accounting & Auditing)`;
+            
+            // === 4. PHONE LOGIC ===
             let rawPhone = row.phone ? row.phone.toString() : '';
             let cleanPhone = rawPhone.replace(/[^0-9]/g, '');
             let finalPhone = '';
@@ -98,27 +119,6 @@
                 isPhoneValid = true;
             }
 
-            // Payment Link
-            const link = `https://cmeg.in/pay?client=${encodeURIComponent(row.client)}&amt=${total}&upi=${encodeURIComponent(selectedUPI)}`;
-
-            // === SPECIFIC SERVICE DESCRIPTIONS ADDED HERE ===
-            let breakdown = "";
-            if (gstRent > 0) breakdown += `  • GST on Rent: Rs.${gstRent}\n`;
-            if (fee > 0)     breakdown += `  • GST Return / Professional Fee: Rs.${fee}\n`;
-            if (gstEpf > 0)  breakdown += `  • GST & EPF Payment: Rs.${gstEpf}\n`;
-
-            // Message Construction
-            let msg = `*PAYMENT DUE*\n\nHello *${row.client}*,\n\n`;
-
-            if (breakdown !== "") {
-                msg += `Your invoice amount for:\n${breakdown}\nis pending.\n\n`;
-            } else {
-                msg += `Your invoice payment is pending.\n\n`;
-            }
-
-            msg += `*Total Payable: Rs.${total}/-*\n\nPlease scan the QR code or pay securely using this link:\n${link}\n\nUPI id:\ncmtaxexperts@ybl (Tax Related)\naccountree1@fdl (Accounting & Auditing)`;
-            
-            // Send Button Logic
             let waLink;
             if (isPhoneValid) {
                 waLink = `https://wa.me/${finalPhone}?text=${encodeURIComponent(msg)}`;
@@ -128,7 +128,7 @@
 
             const btnText = isPhoneValid ? 'Send' : 'Select Contact';
             const phoneDisplayText = isPhoneValid ? finalPhone : 'No Number Saved';
-
+            
             // QR
             const upiString = `upi://pay?pa=${selectedUPI}&pn=CMExperts&am=${total}&tn=Bill-${row.client}`;
 
