@@ -57,8 +57,8 @@ padding:12px 16px;text-transform:uppercase
 .nav-item{
 display:flex;align-items:center;gap:12px;
 padding:12px 16px;color:var(--text);
-text-decoration:none;font-size:14px;
-border-left:3px solid transparent;cursor:pointer
+font-size:14px;border-left:3px solid transparent;
+cursor:pointer
 }
 .nav-item:hover{background:var(--bg);color:var(--primary-blue)}
 .nav-item.active{
@@ -91,20 +91,11 @@ background:#fff;border-radius:12px;border:1px solid var(--border);
 margin-bottom:20px
 }
 .section-header{
-padding:16px;border-bottom:1px solid var(--border);
-display:flex;justify-content:space-between;align-items:center
+padding:16px;border-bottom:1px solid var(--border)
 }
-.section-header h3{font-size:16px}
-.table-container{overflow-x:auto}
 table{width:100%;border-collapse:collapse}
 th,td{padding:12px 16px;border-bottom:1px solid var(--border)}
 th{font-size:12px;color:var(--muted);text-transform:uppercase}
-
-/* BADGES */
-.badge{padding:4px 10px;border-radius:20px;font-size:12px}
-.badge-paid{background:#c8e6c9;color:var(--success-green)}
-.badge-pending{background:#ffe0b2;color:#f57c00}
-.badge-draft{background:#eee;color:#666}
 </style>
 </head>
 
@@ -114,148 +105,112 @@ th{font-size:12px;color:var(--muted);text-transform:uppercase}
 
 <!-- HEADER -->
 <div class="header">
-<a class="logo-header"><i class="fas fa-book"></i>cm<strong>books</strong></a>
-<div class="header-icons">
-<button><i class="fas fa-bell"></i></button>
-<button><i class="fas fa-gear"></i></button>
-<button><i class="fas fa-user"></i></button>
-</div>
+  <a class="logo-header"><i class="fas fa-book"></i>cm<strong>books</strong></a>
+  <div class="header-icons">
+    <button><i class="fas fa-bell"></i></button>
+    <button><i class="fas fa-gear"></i></button>
+    <button><i class="fas fa-user"></i></button>
+  </div>
 </div>
 
 <div class="main-content">
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-  <!-- fixed sidebar with data-module -->
-</div>
 
-
-  <!-- PRIMARY ACTION -->
-  <button class="add-btn" onclick="alert('New Transaction')">
+  <button class="add-btn">
     <i class="fas fa-plus"></i> New Transaction
   </button>
 
-  <!-- OVERVIEW (ALWAYS VISIBLE) -->
   <div class="sidebar-title">Overview</div>
-  <div class="nav-item active" onclick="show('dashboard')">
+  <div class="nav-item active">
     <i class="fas fa-chart-line"></i> Dashboard
   </div>
 
-  <!-- MASTERS (ALWAYS VISIBLE) -->
   <div class="sidebar-title">Masters</div>
-  <div class="nav-item">
-    <i class="fas fa-users"></i> Parties
-  </div>
-  <div class="nav-item">
-    <i class="fas fa-box"></i> Items / Services
-  </div>
+  <div class="nav-item"><i class="fas fa-users"></i> Parties</div>
+  <div class="nav-item"><i class="fas fa-box"></i> Items / Services</div>
 
-  <!-- TRANSACTIONS -->
   <div class="sidebar-title">Transactions</div>
+  <div class="nav-item"><i class="fas fa-file-invoice-dollar"></i> Sales</div>
 
-  <!-- Sales = ALWAYS -->
-  <div class="nav-item">
-    <i class="fas fa-file-invoice-dollar"></i> Sales
-  </div>
-
-  <!-- PURCHASE = RULE CONTROLLED -->
+  <!-- RULE CONTROLLED -->
   <div class="nav-item" data-module="purchase">
     <i class="fas fa-cart-shopping"></i> Purchase
   </div>
 
-  <!-- Expenses = ALWAYS -->
-  <div class="nav-item">
-    <i class="fas fa-money-bill"></i> Expenses
-  </div>
+  <div class="nav-item"><i class="fas fa-money-bill"></i> Expenses</div>
+  <div class="nav-item"><i class="fas fa-arrow-down"></i> Receipts</div>
+  <div class="nav-item"><i class="fas fa-arrow-up"></i> Payments</div>
+  <div class="nav-item"><i class="fas fa-book"></i> Journal Entries</div>
 
-  <!-- Receipts = ALWAYS -->
-  <div class="nav-item">
-    <i class="fas fa-arrow-down"></i> Receipts
-  </div>
-
-  <!-- Payments = ALWAYS -->
-  <div class="nav-item">
-    <i class="fas fa-arrow-up"></i> Payments
-  </div>
-
-  <!-- Journal = ALWAYS -->
-  <div class="nav-item">
-    <i class="fas fa-book"></i> Journal Entries
-  </div>
-
-  <!-- INVENTORY = RULE CONTROLLED -->
-  <div class="sidebar-title" data-module="inventory">Inventory</div>
+  <!-- RULE CONTROLLED -->
   <div class="nav-item" data-module="inventory">
     <i class="fas fa-warehouse"></i> Stock Summary
   </div>
 
-  <!-- MANUFACTURING = RULE CONTROLLED -->
-  <div class="sidebar-title" data-module="manufacturing">Manufacturing</div>
+  <!-- RULE CONTROLLED -->
   <div class="nav-item" data-module="manufacturing">
     <i class="fas fa-industry"></i> Production
   </div>
 
-  <!-- REPORTS (ALWAYS VISIBLE) -->
   <div class="sidebar-title">Reports</div>
-  <div class="nav-item">
-    <i class="fas fa-chart-bar"></i> Reports
-  </div>
+  <div class="nav-item"><i class="fas fa-chart-bar"></i> Reports</div>
 
-  <!-- SETTINGS (ALWAYS VISIBLE) -->
   <div class="sidebar-title">Settings</div>
-  <div class="nav-item">
-    <i class="fas fa-gear"></i> Settings
-  </div>
+  <div class="nav-item"><i class="fas fa-gear"></i> Settings</div>
 
 </div>
-
 
 <!-- CONTENT -->
-<div class="content" id="dashboard">
+<div class="content">
 
-<div class="stats-grid">
-<div class="stat-card">
-<div class="stat-title">Total Sales</div>
-<div class="stat-value">₹ 0</div>
-</div>
-<div class="stat-card">
-<div class="stat-title">Receivables</div>
-<div class="stat-value">₹ 0</div>
-</div>
-<div class="stat-card">
-<div class="stat-title">Total Expenses</div>
-<div class="stat-value">₹ 0</div>
-</div>
-<div class="stat-card">
-<div class="stat-title">Net Balance</div>
-<div class="stat-value">₹ 0</div>
-</div>
-</div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-title">Total Sales</div>
+      <div class="stat-value">₹ 0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Receivables</div>
+      <div class="stat-value">₹ 0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Total Expenses</div>
+      <div class="stat-value">₹ 0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Net Balance</div>
+      <div class="stat-value">₹ 0</div>
+    </div>
+  </div>
 
-<div class="section-card">
-<div class="section-header">
-<h3>Recent Transactions</h3>
-</div>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>Type</th><th>Party</th><th>Date</th><th>Amount</th><th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="5" style="text-align:center;color:#999">No transactions yet</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-
-</div>
+  <div class="section-card">
+    <div class="section-header">
+      <strong>Recent Transactions</strong>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th><th>Party</th><th>Date</th><th>Amount</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="5" style="text-align:center;color:#999">
+            No transactions yet
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
 </div>
+
 </div>
+</div>
+
+<!-- RULE ENGINE -->
+<script src="rules.js"></script>
 
 </body>
 </html>
