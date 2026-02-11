@@ -25,7 +25,7 @@ const CURRENT_BUSINESS_TYPE = "service";
 // change to: trading | manufacturing
 
 function applyBusinessRules() {
-  const rules = BUSINESS_RULES[CURRENT_BUSINESS_TYPE];
+  const rules = BUSINESS_RULES[CURRENT_BUSINESS_TYPE = "service";];
 
   document.querySelectorAll('[data-module]').forEach(el => {
     const moduleName = el.getAttribute('data-module');
